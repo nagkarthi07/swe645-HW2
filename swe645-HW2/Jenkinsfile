@@ -1,0 +1,38 @@
+pipeline{
+agent any
+environment{
+         DOCKERHUB_PASS = credentials('docker-pass')
+         }
+         stages{
+         stage{"Building the Student survey"){
+         steps{
+         script{
+         checkout scm
+         sh 'rm -rf *.war'
+         sh 'jar -cvf index.war -C WebContent/ .'
+         sh ' echo ${BUILD_TIMESTAMP}'
+         sh "docker login -u akhpng31 -p ${DOCKERHUB_PASS}"
+         def customImage = docker.build("akhpng31/phani645:${BUILD_TIMESTAMP}")
+         }
+         }
+         }
+         stage("pushing image"){
+         dteps{
+         script{
+         sh 'docker push akhpng31/phani645:${BUILD_TIMESTAMP}'
+         }
+         }
+         }
+         stage("Deploying to rancher"){
+         steps{
+         sh 'kubectl set image deployment/stusurvey-pipeline stusurvey-pipeline=akhpng31/phani645:${BUILD_TIMESTAMP} -n jenkins-pipeline'
+         }
+         }
+         stage("Deploying to rancher")
+         {
+         steps{
+         sh 'kubectl set image deployment/phani645-lb phani645-lb=akhpng31/phani645:${BUILD_TIMESTAMP} -n jenkins-pipeline'
+         }
+         }
+         }
+         }
