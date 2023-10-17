@@ -17,7 +17,7 @@ environment{
          }
          }
          stage("pushing image"){
-         dteps{
+         steps{
          script{
          sh 'docker push akhpng31/phani645:${BUILD_TIMESTAMP}'
          }
