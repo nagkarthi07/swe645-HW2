@@ -12,14 +12,14 @@ environment{
          sh 'jar -cvf index.war -C WebContent/ .'
          sh ' echo ${BUILD_TIMESTAMP}'
          sh "docker login -u akhpng31 -p ${akhpngubuntu}"
-         def customImage = docker.build("akhpng31/phani645:${BUILD_TIMESTAMP}")
+         def customImage = docker.build("akhpng31/phani645:${1000}")
          }
          }
          }
          stage("pushing image"){
          steps{
          script{
-         sh 'docker push akhpng31/phani645:${BUILD_TIMESTAMP}'
+         sh 'docker push akhpng31/phani645:${1000}'
          }
          }
          }
