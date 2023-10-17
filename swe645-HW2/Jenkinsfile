@@ -11,7 +11,7 @@ environment{
          sh 'rm -rf *.war'
          sh 'jar -cvf index.war -C WebContent/ .'
          sh ' echo ${BUILD_TIMESTAMP}'
-         sh "docker login -u akhpng31 -p ${DOCKERHUB_PASS}"
+         sh "docker login -u akhpng31 -p ${akhpngubuntu}"
          def customImage = docker.build("akhpng31/phani645:${BUILD_TIMESTAMP}")
          }
          }
