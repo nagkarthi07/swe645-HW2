@@ -4,7 +4,7 @@ environment{
          DOCKERHUB_PASS = credentials('docker-pass')
          }
          stages{
-         stage{"Building the Student survey"){
+         stage("Building the Student survey"){
          steps{
          script{
          checkout scm
