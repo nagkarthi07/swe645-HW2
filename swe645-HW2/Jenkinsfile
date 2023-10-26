@@ -1,13 +1,13 @@
 pipeline{
-
-environment{
-           registry = "akhpng31/phani645"
-  registryCredential = "docker"
-         def datelog = new Date().format("yyyyMMdd : HHmmss")
-         }
+           environment{
+                      registry = "akhpng31/phani645"
+           registryCredential = 'dockerhub'
+                      // def dateTag = new D
+           def dateTag = new Date().format("yyyyMMdd : HHmmss")
+           }
 agent any
   stages{
-         stage("Building war"){
+           stage("Building war"){
          steps{
          script{
          
@@ -25,7 +25,7 @@ agent any
          steps{
          script{
              docker.withRegistry('', registryCredential){
-             def image docker.build("akhpng31/phani645:"+ dateTag, " . --no cache")
+             def image = docker.build("akhpng31/phani645:"+ dateTag, " . --no cache")
              docker.withRegistry('',registryCredential){
                       image.push()
                   
