@@ -1,38 +1,51 @@
 pipeline{
-agent any
+
 environment{
-         DOCKERHUB_PASS = credentials('akhpngubuntu')
+           registry = "akhpng31/phani645"
+  registryCredential = "dockerhub"
+         del datelog = new Date().format("yyyyMMdd : HHmmss")
          }
-         stages{
-         stage("Building the Student survey"){
+agent any
+  stages{
+         stage("Building the Student war"){
          steps{
          script{
-         checkout scm
+         
          sh 'rm -rf *.war'
-         sh 'jar -cvf index.war -C WebContent/ .'
-         sh ' echo ${BUILD_TIMESTAMP}'
-         sh "docker login -u akhpng31 -p ${DOCKERHUB_PASS}"
-         def customImage = docker.build("akhpng31/phani645:${1000}")
+         sh 'jar -cvf index.war -C src/main/webapp .'
+         docker.withRegistry('',registryCredential){
+         def img = docker.build("akhpng31/phani645:"+ dateTag)
          }
          }
          }
-         stage("pushing image"){
+         }
+
+  
+         stage("pushing latest code to docker hub"){
          steps{
          script{
-         sh 'docker push akhpng31/phani645:${1000}'
+             docker.withRegistry('', registryCredential){
+             del image docker.build("akhpng31/phani645:"+ datelog, " . --no cache")
+             docker.withRegistry('',registryCredential){
+                      image.push()
+                  
+         }
+         }
          }
          }
          }
          stage("Deploying to rancher as pod"){
          steps{
-         sh 'kubectl set image deployment/stusurvey-pipeline stusurvey-pipeline=akhpng31/phani645:${BUILD_TIMESTAMP} -n jenkins-pipeline'
-         }
-         }
-         stage("Deploying to rancher with load balancer")
-         {
-         steps{
-         sh 'kubectl set image deployment/phani645-lb phani645-lb=akhpng31/phani645:${BUILD_TIMESTAMP} -n jenkins-pipeline'
+         script{
+         sh 'kubectl set image deployment/depo container-0=akhpng31/phani645:'+ dateTag
+         sh 'kubectl set image deployment/lb container-0=akhpng31/phani645:'+ dateTag
          }
          }
          }
          }
+post{
+         always{
+                  sh 'docker logout'
+         }
+}
+}
