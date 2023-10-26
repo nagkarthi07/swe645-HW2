@@ -37,8 +37,8 @@ agent any
          stage("Deploying to rancher as pod"){
          steps{
          script{
-         sh 'kubectl set image deployment/depo container-0=akhpng31/phani645:'+ dateTag
-         sh 'kubectl set image deployment/lb container-0=akhpng31/phani645:'+ dateTag
+         sh 'kubectl set image deployment/dp container-0=akhpng31/phani645:'+ dateTag
+         sh 'kubectl set image deployment/dplb container-0=akhpng31/phani645:'+ dateTag
          }
          }
          }
