@@ -2,17 +2,17 @@ pipeline{
 
 environment{
            registry = "akhpng31/phani645"
-  registryCredential = "dockerhub"
-         del datelog = new Date().format("yyyyMMdd : HHmmss")
+  registryCredential = "docker"
+         def datelog = new Date().format("yyyyMMdd : HHmmss")
          }
 agent any
   stages{
-         stage("Building the Student war"){
+         stage("Building war"){
          steps{
          script{
          
          sh 'rm -rf *.war'
-         sh 'jar -cvf index.war -C src/main/webapp .'
+         sh 'jar -cvf phani.war -C src/main/webapp .'
          docker.withRegistry('',registryCredential){
          def img = docker.build("akhpng31/phani645:"+ dateTag)
          }
@@ -25,7 +25,7 @@ agent any
          steps{
          script{
              docker.withRegistry('', registryCredential){
-             del image docker.build("akhpng31/phani645:"+ datelog, " . --no cache")
+             def image docker.build("akhpng31/phani645:"+ dateTag, " . --no cache")
              docker.withRegistry('',registryCredential){
                       image.push()
                   
