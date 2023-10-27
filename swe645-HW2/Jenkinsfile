@@ -2,7 +2,6 @@ pipeline{
            environment{
                       registry = "akhpng31/phani645"
            registryCredential = 'dockerhub'
-                      // def dateTag = new D
            def dateTag = new Date().format("yyyyMMdd : HHmmss")
            }
 agent any
